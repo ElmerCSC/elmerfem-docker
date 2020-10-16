@@ -1,0 +1,7 @@
+FROM ubuntu:artful
+RUN apt-get update
+RUN apt-get install -y software-properties-common apt-file python-software-properties
+RUN add-apt-repository ppa:elmer-csc-ubuntu/elmer-csc-ppa
+RUN apt-get update
+RUN mkdir elmerbuild
+WORKDIR elmerbuild

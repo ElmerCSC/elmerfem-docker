@@ -1,0 +1,15 @@
+FROM debian:stretch
+RUN apt-get -y update && apt-get install -y gcc cmake g++ gfortran libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN apt-get install -y liboce-foundation-dev liboce-modeling-dev libqwt-dev
+RUN apt-get install -y libmumps-dev libhypre-dev
+RUN apt-get install -y libscotchparmetis-dev
+RUN apt-get install -y libmetis-dev
+RUN apt-get install -y cmake-curses-gui
+RUN apt-get install -y libhypre-dev
+RUN apt-get install -y libvtk6-dev libvtk6-qt-dev
+RUN apt-get install -y qtscript5-dev qtbase5-dev
+ADD ./precaches/opts-debian-stretch.cmake /opts-debian-stretch.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild

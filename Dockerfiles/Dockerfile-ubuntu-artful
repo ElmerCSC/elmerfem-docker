@@ -1,0 +1,12 @@
+FROM ubuntu:artful
+RUN apt-get -y update && apt-get install -y gcc cmake g++ gfortran libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN apt-get install -y libmumps-dev 
+RUN apt-get install -y libparmetis-dev 
+RUN apt-get install -y libmetis-dev 
+RUN apt-get install -y libhypre-dev
+ADD .stamp ./
+ADD precaches/opts-ubuntu-artful.cmake /opts-ubuntu-artful.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild

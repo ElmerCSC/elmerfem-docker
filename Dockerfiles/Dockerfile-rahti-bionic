@@ -1,0 +1,15 @@
+FROM ubuntu:bionic
+RUN apt-get -y update && apt-get install -y gcc cmake g++ gfortran libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN apt-get install -y libmumps-dev 
+RUN apt-get install -y libparmetis-dev 
+RUN apt-get install -y libmetis-dev 
+RUN apt-get install -y libhypre-dev
+RUN git clone --depth=1 https://github.com/ElmerCSC/elmerfem
+ADD .stamp ./
+RUN cd elmerfem && git pull
+RUN mkdir elmerbuild
+ADD precaches/opts-rahti-bionic.cmake elmerbuild/opts.cmake
+WORKDIR elmerbuild
+RUN cmake -C opts.cmake ../elmerfem
+RUN make install

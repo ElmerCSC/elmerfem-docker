@@ -1,0 +1,13 @@
+FROM ubuntu:wily
+RUN apt-get -y update && apt-get install -y gcc cmake g++ gfortran libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN git clone https://github.com/juhanikataja/elmerfem -b cmake-openmp
+ADD .stamp ./
+RUN cd elmerfem && git pull
+ADD precaches/opts-ubuntu-wily.cmake /opts-ubuntu-wily.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild
+RUN cmake -C ../opts-ubuntu-wily.cmake ../elmerfem
+RUN make
+RUN ctest -L quick

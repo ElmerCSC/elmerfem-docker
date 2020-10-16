@@ -1,0 +1,12 @@
+FROM ubuntu:bionic
+RUN apt-get -y update && apt-get install -y gcc-8 cmake g++-8 gfortran-8 libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN apt-get install -y libmumps-dev 
+RUN apt-get install -y libparmetis-dev 
+RUN apt-get install -y libmetis-dev 
+RUN apt-get install -y libhypre-dev
+ADD .stamp ./
+ADD precaches/opts-ubuntu-bionic-8.cmake /opts-ubuntu-bionic-8.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild

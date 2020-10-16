@@ -1,0 +1,14 @@
+FROM debian:jessie
+RUN apt-get -y update && apt-get install -y gcc cmake g++ gfortran libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN git clone https://github.com/juhanikataja/elmerfem
+ADD .stamp ./
+RUN cd elmerfem && git pull
+ADD precaches/opts-debian-jessie.cmake /opts-debian-jessie.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild
+RUN cmake -C ../opts-debian-jessie.cmake ../elmerfem
+RUN make
+RUN ctest -L quick
+RUN make install/fast

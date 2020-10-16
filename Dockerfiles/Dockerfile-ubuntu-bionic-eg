@@ -1,0 +1,16 @@
+FROM ubuntu:bionic
+RUN apt-get -y update && apt-get install -y gcc cmake g++ gfortran libopenblas-dev git
+RUN apt-get install -y unzip libopenmpi-dev
+RUN apt-get install -y libmumps-dev 
+RUN apt-get install -y libparmetis-dev 
+RUN apt-get install -y libmetis-dev 
+RUN apt-get install -y libhypre-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata
+RUN apt-get install -y liboce-modeling-dev liboce-foundation-dev qtscript5-dev libqt5script5 libqt5widgets5 libqt5core5a libqt5gui5 libqt5help5 libqt5opengl5 libqt5opengl5-dev libvtk7-dev libvtk7.1 libvtk7.1-qt libvtk7-qt-dev
+# RUN apt-get install -y libqwt-qt5-6
+# RUN apt-get install -y libqwt-qt5-dev
+ADD .stamp ./
+ADD precaches/opts-ubuntu-bionic-eg.cmake /opts-ubuntu-bionic-eg.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild
