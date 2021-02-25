@@ -1,0 +1,41 @@
+FROM ubuntu:focal
+# Create an apt configuration file to fix erroneous "hash sum mismatch" errors
+#RUN printf "Acquire::http::Pipeline-Depth 0;\nAcquire::http::No-Cache true;\nAcquire::BrokenProxy true;" \
+#    >> /etc/apt/apt.conf.d/99fixbadproxy
+# Add the necessary packages to compile Elmer/Ice
+RUN apt update  && apt upgrade -y
+RUN DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    build-essential \
+    git \
+    libblas-dev \
+    liblapack-dev \
+    libmumps-dev \
+    libparmetis-dev \
+    libhypre-dev \
+    gfortran \
+    mpich \
+    sudo \
+    cmake \
+    ca-certificates \
+    less 
+# Add necessary packages to compile ElmerGUI
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y liboce-modeling-dev \
+	liboce-foundation-dev \
+	qtscript5-dev \
+	libqt5script5 \
+	libqt5widgets5 \
+	libqt5core5a \
+	libqt5gui5 \
+	libqt5help5 \
+	libqt5opengl5 \
+	libqt5opengl5-dev \
+	libqt5svg5-dev \
+	libvtk6.3 \
+	libvtk6-dev \
+	libvtk6.3-qt \
+	libvtk6-qt-dev 
+ADD .stamp ./
+ADD precaches/opts-ubuntu-focal-eg.cmake /opts-ubuntu-focal-eg.cmake
+RUN ls
+RUN mkdir elmerbuild
+WORKDIR elmerbuild

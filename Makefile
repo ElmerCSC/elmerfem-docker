@@ -1,5 +1,6 @@
 VPATH=stamps
-buildprocs=1
+buildprocs=$(cat /proc/cpuinfo | grep processor | wc -l )
+
 ELMER_SOURCE_DIR?=$(HOME)/src/elmer/elmerfem
 PKGTYPE?=DEB
 
