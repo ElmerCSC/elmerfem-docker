@@ -18,3 +18,5 @@ SET(WITH_ELMERGUI FALSE CACHE BOOL "")
 #SET(WITH_QWT TRUE CACHE BOOL "")
 #SET(WITH_QT5 TRUE CACHE BOOL "")
 #SET(QWT_LIBRARY "/usr/lib/libqwt-qt5.so" CACHE FILE "qwt library file name")
+### docker tries to run mpi as root:
+SET(MPIEXEC_PREFLAGS "--allow-run-as-root" CACHE STRING "")
