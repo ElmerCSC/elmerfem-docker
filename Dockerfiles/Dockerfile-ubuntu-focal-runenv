@@ -1,0 +1,4 @@
+FROM elmer-ubuntu-runenv:latest
+RUN make install
+ENV PATH="$PATH:/usr/local/bin"
+ENV LD_LIBRARY_PATH="/usr/local/share/elmersolver/lib:/usr/local/lib"

@@ -52,3 +52,21 @@ kill-%: start-%
 	rm -f stamps/*-$*
 	rm -f $*.id
 	rm -f $^
+
+runenv-%: 
+	docker build --tag=elmer-runenv-$* -f  Dockerfiles/Dockerfile-runenv-$* .
+	@echo "============================================================="
+	@echo "interactive run with:"
+	@echo "docker run -it -v \$(pwd -LP):/home  elmer-runenv-$* /usr/local/elmer/bin/ElmerSolver"
+	@echo "============================================================="
+	touch stamps/$@
+
+exec-%: runenv-%
+	docker run -it -v $(pwd -LP):/home  elmer-runenv-$*:latest /usr/local/elmer/bin/ElmerSolver
+
+container-cleanup:
+	docker container prune --force
+	rm -f *.id
+
+stamps-cleanup:
+	rm -f stamps/*
