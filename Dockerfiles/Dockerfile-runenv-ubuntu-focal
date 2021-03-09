@@ -1,0 +1,54 @@
+FROM ubuntu:focal
+# Set the working directory to /home
+WORKDIR /home
+# Create an apt configuration file to fix erroneous "hash sum mismatch" errors
+RUN printf "Acquire::http::Pipeline-Depth 0;\nAcquire::http::No-Cache true;\nAcquire::BrokenProxy true;" \
+    >> /etc/apt/apt.conf.d/99fixbadproxy
+# Add the necessary packages to compile Elmer/Ice
+RUN apt update -y -o Acquire::CompressionTypes::Order::=gz && apt upgrade -y
+RUN DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
+    build-essential \
+    git \
+    libblas-dev \
+    liblapack-dev \
+    libmumps-dev \
+    libparmetis-dev \
+    libhypre-dev \
+    gfortran \
+    mpich \
+    sudo \
+    cmake \
+    less
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        make \
+        wget && \
+    rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://cmake.org/files/v3.18/cmake-3.18.4-Linux-x86_64.sh && \
+    mkdir -p /usr/local && \
+    /bin/sh /var/tmp/cmake-3.18.4-Linux-x86_64.sh --prefix=/usr/local --skip-license && \
+    rm -rf /var/tmp/cmake-3.18.4-Linux-x86_64.sh
+ENV PATH=/usr/local/bin:$PATH
+# fetching Elmer source code, configuring and compiling
+RUN git clone git://www.github.com/ElmerCSC/elmerfem -b devel devel \
+        && mkdir devel/builddir \
+        && cd devel/builddir \
+        && cmake ../ -DCMAKE_C_COMPILER=/usr/bin/gcc \
+      -DCMAKE_INSTALL_PREFIX=/usr/local/elmer \
+      -DCMAKE_Fortran_COMPILER=/usr/bin/gfortran \
+      -DWITH_MPI:BOOL=TRUE \
+      -DWITH_LUA:BOOL=TRUE \
+      -DWITH_Mumps:BOOL=TRUE \
+      -DWITH_Hypre:BOOL=TRUE \
+      -DHypre_INCLUDE_DIR="/usr/include/hypre" \
+      -DWITH_Trilinos:BOOL=FALSE \
+      -DWITH_ELMERGUI:BOOL=FALSE \
+      -DWITH_ElmerIce:BOOL=TRUE \
+      -DMPIEXEC_PREFLAGS="--allow-run-as-root" \
+      -DCMAKE_BUILD_TYPE=Release\
+      && make VERBOSE=1 -j$(nproc) \
+      && make install \
+      && cd /home && rm -fr /home/devel \
+ENV PATH=$PATH:/usr/local/elmer/bin \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/elmer/share/elmersolver/lib
+    
