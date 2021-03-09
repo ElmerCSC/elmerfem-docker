@@ -1,6 +1,6 @@
 # Elmer build apparatuses for various Linux distros using docker Dockerfiles 
 
-Currently ubuntu-artful and debian-stretch work fine. Others are remnants of past.
+Currently ubuntu-focal and debian-buster work fine. Others are remnants of past.
 
 Usage:
   * Set env variable `ELMER_SOURCE_DIR` point at elmer source directory.
@@ -11,9 +11,9 @@ Usage:
     ```bash
     $ docker run -it -v $(pwd -LP):/home elmer-runenv-ubuntu-focal /usr/local/elmer/bin/ElmerSolver nameofyour.sif
     ````
-    * or in case of a parallel run 
+    * or in case of a parallel MPI run (here with 6 processes)
     ```bash
-    $ run -it -v $(pwd -LP):/home elmer-runenv-ubuntu-focal mpirun --allow-run-as-root -np 6 /usr/local/elmer/bin/ElmerSolver nameofyour.sif
+    $ docker run -it -v $(pwd -LP):/home elmer-runenv-ubuntu-focal mpirun --allow-run-as-root -np 6 /usr/local/elmer/bin/ElmerSolver nameofyour.sif
     ```
     
 # TODO
